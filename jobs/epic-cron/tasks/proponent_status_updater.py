@@ -7,6 +7,9 @@ Business Logic:
        - The work's current phase has enable_submit = True
        - The work state is NOT in [COMPLETED, TERMINATED, CLOSED, WITHDRAWN]
        - The work is active and not deleted
+
+    Note: Only INELIGIBLE proponents, or proponents without a status,
+          are changed to ELIGIBLE. 
     
     A proponent is INELIGIBLE if:
     - They do NOT meet the ELIGIBLE criteria above, AND
@@ -192,7 +195,13 @@ class ProponentStatusUpdater:
             return
         
         proponents = session.query(SubmitProponentModel).filter(
-            SubmitProponentModel.id.in_(proponent_ids)
+            and_(
+                SubmitProponentModel.id.in_(proponent_ids),
+                or_(
+                    SubmitProponentModel.status.is_(None),
+                    SubmitProponentModel.status == ProponentStatus.INELIGIBLE
+                )
+            )
         ).all()
         
         updated_count = 0
