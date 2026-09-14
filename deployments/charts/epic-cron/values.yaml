@@ -80,8 +80,8 @@ KEYCLOAK:
 CHES:
   tokenEndpoint: "https://dev.loginproxy.gov.bc.ca/auth/realms/comsvcauth/protocol/openid-connect/token"
   apiEndpoint: "https://ches-dev.api.gov.bc.ca"
-  clientId: "CDACC9DF-F0E517FDED1"
-  clientSecret: "5c3cd76e-f02c-4903-af8a-ed3c7b0c5372"
+  clientId: ""
+  clientSecret: ""
 
 CLAMAV:
   host: "142.34.194.68"
@@ -89,13 +89,13 @@ CLAMAV:
 
 secrets:
   trackDbUsername: "app"
-  trackDbPassword: "hXCJPqKPxJgz3WuY4Go9atVkhoixXMh2"
+  trackDbPassword: ""
   trackDbName: "app"
   submitDbUsername: "app"
-  submitDbPassword: "3zo5rpxFOW6jSQY78qzOtAoVx0v9Saoz"
+  submitDbPassword: ""
   submitDbName: "app"
   centreDbUsername: "app"
-  centreDbPassword: "TEuXBkD3yxQ4sHoiN7zYk9ZzNezWB9ZC"
+  centreDbPassword: ""
   centreDbName: "app"
   complianceDbUsername: "app"
   complianceDbPassword: "compliance_password_dev"
@@ -104,4 +104,4 @@ secrets:
   conditionDbPassword: ""
   conditionDbName: "app"
   serviceAccountId: "submit-api-condition-client"
-  serviceAccountSecret: "6EtBYwDHyeVBwJRP2SQ6oPyldDNJgSvO"
+  serviceAccountSecret: ""
