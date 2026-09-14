@@ -13,23 +13,24 @@ replicaCount: 1
 imageTag: dev
 
 cronTab: |
-  0 1 * * * default cd /epic-cron && ./run_project_cron_submit.sh v2
+  0 1 * * * default cd /epic-cron && ./run_project_cron_submit.sh
   0 3 * * * default cd /epic-cron && ./run_project_cron_compliance.sh
-  */5 * * * * default cd /epic-cron && ./run_emailer.sh
-  */5 * * * * default cd /epic-cron && ./run_centre_emailer.sh
-  0 17 * * 1-5 default cd /epic-cron && ./run_approved_condition.sh
-  0 2 * * * default cd /epic-cron && ./run_epic_public_extractor.sh
+  */6 * * * * default cd /epic-cron && ./run_emailer.sh
+  */4 * * * * default cd /epic-cron && ./run_centre_emailer.sh
+  10 * * * * default cd /epic-cron && ./run_approved_condition.sh
 
 SUBMIT:
   database:
-    host: submit-patroni
+    host: submit-patroni.c72cba-dev.svc.cluster.local
     port: "5432"
   web:
     url: "https://dev.submit.eao.gov.bc.ca"
   sender:
-    email: "EAO.ManagementPlanSupport@gov.bc.ca"
-  staffSupportMailId: ""
-  signupUrlPath: "/proponent/account-registration"
+    email: "EAO.ManagementPlanSupport.dev@gov.bc.ca"
+  staffSupportMailId: "saravan.azhikoden@gov.bc.ca"
+  signupUrlPath: "/proponent/registration"
+  api:
+    url: "https://submit-api-c72cba-dev.apps.gold.devops.gov.bc.ca"
 
 COMPLIANCE:
   database:
@@ -40,11 +41,18 @@ TRACK:
   database:
     host: epictrack-patroni
     port: "5432"
+  api:
+    url: "https://epictrack-api-c72cba-dev.apps.gold.devops.gov.bc.ca"
 
 CENTRE:
   database:
     host: centre-patroni
     port: "5432"
+  senderEmail: "EAO.EPICsystem.TEST@gov.bc.ca"
+  pendingAccessReminder:
+    hours: "48"
+    email: "Don.Varghese@gov.bc.ca"
+    baseUrl: "https://dev.submit.eao.gov.bc.ca"
 
 CONDITION:
   api:
@@ -53,10 +61,14 @@ CONDITION:
     host: condition-patroni
     port: "5432"
 
+SSL:
+  notificationRecipients: "saravanpa@gmail.com,Saravan.Azhikoden@gov.bc.ca,Carly.GreeneHill@gov.bc.ca"
+
 EPIC_PUBLIC:
   baseUrl: "https://projects.eao.gov.bc.ca"
   searchPath: "/api/public/search"
-  documentTypeMap: ""
+  documentTypeIds: "5cf00c03a266b7e1877504d1,5cf00c03a266b7e1877504d5,5df79dd77b5abbf7da6f51bf,5df79dd77b5abbf7da6f51cc"
+  documentTypeMap: "5cf00c03a266b7e1877504d1:Other Order,5cf00c03a266b7e1877504d5:Certificate,5df79dd77b5abbf7da6f51bf:Other Order,5df79dd77b5abbf7da6f51cc:Certificate,5cf00c03a266b7e1877504d6:Exemption Order"
   maxPages: ""
   maxDocuments: ""
   enableDetailedLogs: "false"
@@ -68,8 +80,8 @@ KEYCLOAK:
 CHES:
   tokenEndpoint: "https://dev.loginproxy.gov.bc.ca/auth/realms/comsvcauth/protocol/openid-connect/token"
   apiEndpoint: "https://ches-dev.api.gov.bc.ca"
-  clientId: ""
-  clientSecret: ""
+  clientId: "CDACC9DF-F0E517FDED1"
+  clientSecret: "5c3cd76e-f02c-4903-af8a-ed3c7b0c5372"
 
 CLAMAV:
   host: "142.34.194.68"
@@ -77,16 +89,19 @@ CLAMAV:
 
 secrets:
   trackDbUsername: "app"
-  trackDbPassword: ""
+  trackDbPassword: "hXCJPqKPxJgz3WuY4Go9atVkhoixXMh2"
   trackDbName: "app"
   submitDbUsername: "app"
-  submitDbPassword: ""
+  submitDbPassword: "3zo5rpxFOW6jSQY78qzOtAoVx0v9Saoz"
   submitDbName: "app"
   centreDbUsername: "app"
-  centreDbPassword: ""
+  centreDbPassword: "TEuXBkD3yxQ4sHoiN7zYk9ZzNezWB9ZC"
   centreDbName: "app"
-  serviceAccountId: ""
-  serviceAccountSecret: ""
+  complianceDbUsername: "app"
+  complianceDbPassword: "compliance_password_dev"
+  complianceDbName: "app"
   conditionDbUsername: "app"
   conditionDbPassword: ""
   conditionDbName: "app"
+  serviceAccountId: "submit-api-condition-client"
+  serviceAccountSecret: "6EtBYwDHyeVBwJRP2SQ6oPyldDNJgSvO"

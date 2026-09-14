@@ -247,6 +247,29 @@ spec:
                 configMapKeyRef:
                   name: {{ .Values.name }}-config
                   key: SUBMIT_API_BASE_URL
+            - name: SUBMIT_API_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Values.name }}-config
+                  key: SUBMIT_API_URL
+
+            - name: TRACK_API_BASE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Values.name }}-config
+                  key: TRACK_API_BASE_URL
+
+            - name: SSL_NOTIFICATION_RECIPIENTS
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Values.name }}-config
+                  key: SSL_NOTIFICATION_RECIPIENTS
+
+            - name: EPIC_PUBLIC_DOCUMENT_TYPE_IDS
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Values.name }}-config
+                  key: EPIC_PUBLIC_DOCUMENT_TYPE_IDS
 
             - name: EPIC_PUBLIC_BASE_URL
               valueFrom:
