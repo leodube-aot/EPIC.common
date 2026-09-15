@@ -35,9 +35,14 @@ data:
   # API URLs
   CONDITION_API_BASE_URL: "{{ .Values.CONDITION.api.url }}"
   SUBMIT_API_BASE_URL: "{{ .Values.SUBMIT.api.url }}"
+  SUBMIT_API_URL: "{{ .Values.SUBMIT.api.url }}"
+  TRACK_API_BASE_URL: "{{ .Values.TRACK.api.url }}"
+  # SSL checker notification recipients (comma-separated)
+  SSL_NOTIFICATION_RECIPIENTS: "{{ .Values.SSL.notificationRecipients }}"
   # EPIC Public configuration
   EPIC_PUBLIC_BASE_URL: "{{ .Values.EPIC_PUBLIC.baseUrl }}"
   EPIC_PUBLIC_SEARCH_PATH: "{{ .Values.EPIC_PUBLIC.searchPath }}"
+  EPIC_PUBLIC_DOCUMENT_TYPE_IDS: "{{ .Values.EPIC_PUBLIC.documentTypeIds }}"
   EPIC_PUBLIC_DOCUMENT_TYPE_MAP: "{{ .Values.EPIC_PUBLIC.documentTypeMap }}"
   EPIC_PUBLIC_MAX_PAGES: "{{ .Values.EPIC_PUBLIC.maxPages }}"
   EPIC_PUBLIC_MAX_DOCUMENTS: "{{ .Values.EPIC_PUBLIC.maxDocuments }}"

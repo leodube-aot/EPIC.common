@@ -1,0 +1,88 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: {{ .Values.name }}-test-config
+  labels:
+    app: {{ .Values.name }}
+    app-group: epic-app
+  annotations:
+    "helm.sh/hook": test
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+spec:
+  restartPolicy: Never
+  containers:
+    - name: verify-config
+      image: image-registry.openshift-image-registry.svc:5000/{{ .Values.imageNamespace }}/{{ .Values.name }}:{{ .Values.imageTag }}
+      imagePullPolicy: Always
+      # Verify the release wired the critical config/env into the container.
+      # These env vars come from the epic-cron-config ConfigMap and epic-cron
+      # Secret created by this chart. If any required one is empty, fail.
+      env:
+        - name: SUBMIT_DATABASE_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: {{ .Values.name }}-config
+              key: SUBMIT_DATABASE_HOST
+        - name: SUBMIT_API_URL
+          valueFrom:
+            configMapKeyRef:
+              name: {{ .Values.name }}-config
+              key: SUBMIT_API_URL
+        - name: TRACK_API_BASE_URL
+          valueFrom:
+            configMapKeyRef:
+              name: {{ .Values.name }}-config
+              key: TRACK_API_BASE_URL
+        - name: CONDITION_API_BASE_URL
+          valueFrom:
+            configMapKeyRef:
+              name: {{ .Values.name }}-config
+              key: CONDITION_API_BASE_URL
+        - name: KEYCLOAK_BASE_URL
+          valueFrom:
+            configMapKeyRef:
+              name: {{ .Values.name }}-config
+              key: KEYCLOAK_BASE_URL
+        - name: ENVIRONMENT
+          valueFrom:
+            configMapKeyRef:
+              name: {{ .Values.name }}-config
+              key: ENVIRONMENT
+      command:
+        - /bin/sh
+        - -c
+        - |
+          set -e
+          echo "Verifying epic-cron release configuration..."
+          fail=0
+          for var in SUBMIT_DATABASE_HOST SUBMIT_API_URL TRACK_API_BASE_URL \
+                     CONDITION_API_BASE_URL KEYCLOAK_BASE_URL ENVIRONMENT; do
+            eval "val=\${$var}"
+            if [ -z "$val" ]; then
+              echo "FAIL: $var is empty"
+              fail=1
+            else
+              echo "OK:   $var=$val"
+            fi
+          done
+          # crontab file must be mounted and non-empty (this is what schedules the jobs)
+          if [ ! -s /epic-cron/cron/crontab ]; then
+            echo "FAIL: /epic-cron/cron/crontab is missing or empty"
+            fail=1
+          else
+            echo "OK:   crontab mounted with $(grep -c . /epic-cron/cron/crontab) job line(s)"
+          fi
+          if [ "$fail" -ne 0 ]; then
+            echo "epic-cron config verification FAILED"
+            exit 1
+          fi
+          echo "epic-cron config verification PASSED"
+      volumeMounts:
+        - name: cron-config
+          readOnly: true
+          mountPath: /epic-cron/cron/
+  volumes:
+    - name: cron-config
+      configMap:
+        name: {{ .Values.name }}-config
+        defaultMode: 420
